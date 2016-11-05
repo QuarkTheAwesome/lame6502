@@ -99,7 +99,7 @@ case 0x18: if(disassemble == 1)disas("CLC","NODATA"); CLEAR_CF(2);
 
 /* CLD  -  Clear Decimal Mode */
 case 0xD8: if(disassemble == 1)disas("CLD","NODATA"); CLEAR_DM(2);
- 
+
 /* CLI  -  Clear Interrupt Disable */
 case 0x58: if(disassemble == 1)disas("CLI","NODATA"); CLEAR_ID(2);
 
@@ -318,5 +318,5 @@ case 0x98: if(disassemble == 1)disas("TYA","NODATA"); TRANSFER_REG(y_reg,accumul
 
 /* Unrecognized instructions */
 default:
-printf("[%d]: error -> unrecognized instruction at offset 0x%x! opcode -> [%x]\n",debug_cnt-1,program_counter -1,opcode);
+//printf("[%d]: error -> unrecognized instruction at offset 0x%x! opcode -> [%x]\n",debug_cnt-1,program_counter -1,opcode);
 break;

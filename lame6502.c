@@ -85,7 +85,7 @@ int stackdebug = 0;
 /* status_register flags */
 int zero_flag;		/* this is set if the last operation returned a result of zero */
 
-int sign_flag;		/* 
+int sign_flag;		/*
 		 	* (N flag) this is simply a reflection of the highest bit of
 		 	* the result of the last operation. A number with it's high bit
 		 	* set is considered to be negative (0xff = -1); they are called
@@ -97,8 +97,8 @@ int overflow_flag;	/* this is set if the last operation resulted in a sign chang
 int break_flag;		/* this is set only if the BRK instruction is executed. */
 
 int decimal_flag;	/* if set, all Addition/Subtraction operations will be calculated using
-			 * "Binary-coded Decimal"-formatted values (eg., $69 = 69), and will 
-			 * return a BCD value. Decimal mode is unavaliable on the NES' 6502, 
+			 * "Binary-coded Decimal"-formatted values (eg., $69 = 69), and will
+			 * return a BCD value. Decimal mode is unavaliable on the NES' 6502,
 			 * which is just as well.
 			 */
 
@@ -113,9 +113,7 @@ int carry_flag;		/* this holds the "carry" out of the most significant bit of th
 
 int cycle_count;
 
-void
-update_status_register()
-{
+void update_status_register() {
 	status_register = ((sign_flag ? 0x80 : 0) | (zero_flag ? 0x02 : 0) | (carry_flag ? 0x01 : 0) |
 			(interrupt_flag ? 0x04 : 0) | (decimal_flag ? 0x08 : 0) | (overflow_flag ? 0x40 : 0) |
 			(break_flag ? 0x10 : 0) | 0x20);
@@ -124,38 +122,32 @@ update_status_register()
 /*
  * allocate memory
  */
-void
-allocate_memory(int size)
-{
+void allocate_memory(int size) {
 	memory = (unsigned char *)malloc(size);
 }
 
-allocate_memory(65536);
+//allocate_memory(65536);
 
 /*
  * memory read handler
  */
-unsigned char memory_read(unsigned int address) {
+inline unsigned char memory_read(unsigned int address) {
 }
 
 /*
  * memory write handler
  */
-void
-write_memory(unsigned int address,unsigned char data)
-{
+void write_memory(unsigned int address,unsigned char data) {
 }
 
-/* 
+/*
  * Maskable Interrupt
  * irq vector address = 0xfffe
  */
-int
-IRQ(int cycles)
-{
+int IRQ(int cycles) {
 	#ifdef DEBUG
 	if(debug_cnt > show_debug_cnt) {
-		printf("[%d] executing IRQ routine\n",debug_cnt);
+		//printf("[%d] executing IRQ routine\n",debug_cnt);
 	}
 	#endif
 
@@ -164,19 +156,17 @@ IRQ(int cycles)
 	PUSH_ST(GET_SR());
 	break_flag = 0;
 	interrupt_flag = 1;
-	program_counter = (memory[0xffff] << 8) | memory[0xfffe];
+	program_counter = (memory_read(0xffff) << 8) | memory_read(0xfffe);
 	return cycles -= 7;
 }
 
 /* Non-Maskable Interrupt
  * nmi vector address = 0xfffa
  */
-int
-NMI(int cycles)
-{
+int NMI(int cycles) {
 	#ifdef DEBUG
 	if(debug_cnt > show_debug_cnt) {
-		printf("[%d] executing NMI routine\n",debug_cnt);
+		//printf("[%d] executing NMI routine\n",debug_cnt);
 	}
 	#endif
 
@@ -185,7 +175,7 @@ NMI(int cycles)
 	PUSH_ST(GET_SR());
 	break_flag = 0;
 	interrupt_flag = 1;
-	program_counter = (memory[0xfffb] << 8) | memory[0xfffa];
+	program_counter = (memory_read(0xfffb) << 8) | memory_read(0xfffa);
 
 	return cycles -= 7;
 }
@@ -194,9 +184,7 @@ NMI(int cycles)
  * CPU Reset
  * reset vector address (init) = $fffc
  */
-void
-CPU_reset(void)
-{
+void CPU_reset(void) {
 	status_register = 0x20;
 
 	zero_flag = 1;
@@ -209,7 +197,7 @@ CPU_reset(void)
 
 	stack_pointer = 0xff;
 
-	program_counter = (memory[0xfffd] << 8) | memory[0xfffc];
+	program_counter = (memory_read(0xfffd) << 8) | memory_read(0xfffc);
 
 	accumulator=x_reg=y_reg=0;
 }
@@ -217,8 +205,7 @@ CPU_reset(void)
 /*
  * Timing and execution
  */
-int
-CPU_execute(int cycles) {
+int CPU_execute(int cycles) {
 	unsigned char opcode;
 
 	cycle_count = cycles;

@@ -60,6 +60,8 @@ extern int stackdebug;
 extern unsigned char memory_read(unsigned int address);
 extern void write_memory(unsigned int address,unsigned char data);
 
+extern void allocate_memory(int size);
+
 extern int IRQ(int cycles);
 extern int NMI(int cycles);
 extern void CPU_reset(void);
