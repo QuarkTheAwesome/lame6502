@@ -134,7 +134,7 @@ void allocate_memory(int size) {
 inline unsigned char memory_read(unsigned int address) {
 	return memory[address];
 }
-
+void (*write_memory_real)(unsigned int address, unsigned char data);
 /*
  * memory write handler
  */
