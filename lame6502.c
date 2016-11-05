@@ -132,12 +132,16 @@ void allocate_memory(int size) {
  * memory read handler
  */
 inline unsigned char memory_read(unsigned int address) {
+	return memory[address];
 }
 
 /*
  * memory write handler
  */
-void write_memory(unsigned int address,unsigned char data) {
+inline void write_memory(unsigned int address,unsigned char data) {
+	#ifdef _6502_USE_WRITEMEM_FUNC_POINTER
+	write_memory_real(address, data);
+	#endif
 }
 
 /*

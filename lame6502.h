@@ -59,6 +59,9 @@ extern int stackdebug;
 
 extern unsigned char memory_read(unsigned int address);
 extern void write_memory(unsigned int address,unsigned char data);
+#ifdef _6502_USE_WRITEMEM_FUNC_POINTER
+void (*write_memory_real)(unsigned int address, unsigned char data);
+#endif
 
 extern void allocate_memory(int size);
 
